@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://b3pmyrbwhplb6"
+path="res://.godot/imported/OutlineMaskCompute.glsl-d8c51bfd4a3af0080067a20aa32b89a5.res"
+
+[deps]
+
+source_file="res://Shaders/OutlineMaskCompute.glsl"
+dest_files=["res://.godot/imported/OutlineMaskCompute.glsl-d8c51bfd4a3af0080067a20aa32b89a5.res"]
+
+[params]
+

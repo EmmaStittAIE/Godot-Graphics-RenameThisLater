@@ -1,0 +1,194 @@
+[gd_scene load_steps=20 format=3 uid="uid://0oiyxjqdgwhh"]
+
+[ext_resource type="Texture2D" uid="uid://cxndb0kt2wi0i" path="res://Textures/double-left-arrow-01.png" id="1_86q1s"]
+[ext_resource type="Script" path="res://Scripts/Characters.cs" id="1_leb1d"]
+[ext_resource type="Script" path="res://Scripts/OutlineMaskCompute.cs" id="1_pxksx"]
+
+[sub_resource type="Shader" id="Shader_85q21"]
+code = "shader_type spatial;
+
+void fragment() {
+	ALBEDO = vec3(1.0, 1.0, 1.0);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6okbn"]
+render_priority = 0
+shader = SubResource("Shader_85q21")
+
+[sub_resource type="BoxMesh" id="BoxMesh_0fmvg"]
+material = SubResource("ShaderMaterial_6okbn")
+
+[sub_resource type="SphereMesh" id="SphereMesh_o6gjb"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_t3icm"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_4dom4"]
+
+[sub_resource type="SystemFont" id="SystemFont_8xhej"]
+font_names = PackedStringArray("Centaur")
+
+[sub_resource type="LabelSettings" id="LabelSettings_53ej7"]
+font = SubResource("SystemFont_8xhej")
+font_size = 50
+font_color = Color(0, 0, 0, 1)
+outline_size = 6
+
+[sub_resource type="InputEventKey" id="InputEventKey_jmh1v"]
+device = -1
+keycode = 4194319
+
+[sub_resource type="Shortcut" id="Shortcut_20gel"]
+events = [SubResource("InputEventKey_jmh1v")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_tdnfc"]
+device = -1
+keycode = 4194321
+
+[sub_resource type="Shortcut" id="Shortcut_1jsyy"]
+events = [SubResource("InputEventKey_tdnfc")]
+
+[sub_resource type="SystemFont" id="SystemFont_pfxha"]
+font_names = PackedStringArray("Papyrus")
+
+[sub_resource type="InputEventKey" id="InputEventKey_uspv5"]
+device = -1
+keycode = 32
+unicode = 32
+
+[sub_resource type="Shortcut" id="Shortcut_1ei6k"]
+events = [SubResource("InputEventKey_uspv5")]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_bepl5"]
+viewport_path = NodePath("InefficientViewportUsage")
+
+[node name="Node3D" type="Node3D"]
+
+[node name="OutlineMaskCompute" type="Node" parent="."]
+script = ExtResource("1_pxksx")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-4.26863e-08, -0.381603, 0.924326, -9.41097e-09, 0.924326, 0.381603, -1, 7.59042e-09, -4.30473e-08, 6.88338, 1.15278, 0)
+far = 10.0
+
+[node name="Characters" type="Node3D" parent="."]
+script = ExtResource("1_leb1d")
+
+[node name="Cube" type="MeshInstance3D" parent="Characters"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+mesh = SubResource("BoxMesh_0fmvg")
+skeleton = NodePath("../..")
+
+[node name="Sphere" type="MeshInstance3D" parent="Characters"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+mesh = SubResource("SphereMesh_o6gjb")
+
+[node name="Capsule" type="MeshInstance3D" parent="Characters"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
+mesh = SubResource("CapsuleMesh_t3icm")
+skeleton = NodePath("../Sphere")
+
+[node name="Prism" type="MeshInstance3D" parent="Characters"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
+mesh = SubResource("PrismMesh_4dom4")
+skeleton = NodePath("../Sphere")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-2.22286e-08, -0.49142, 0.870922, -3.76374e-08, 0.870922, 0.49142, -1, -2.18557e-08, -3.78552e-08, 0, 0, 0)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleBox" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="TitleMargin" type="MarginContainer" parent="VBoxContainer/TitleBox"]
+layout_mode = 2
+theme_override_constants/margin_top = 25
+
+[node name="Title" type="Label" parent="VBoxContainer/TitleBox/TitleMargin"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Character Select"
+label_settings = SubResource("LabelSettings_53ej7")
+horizontal_alignment = 1
+
+[node name="LeftRightButtonBox" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.2
+
+[node name="LeftButtonMargin" type="MarginContainer" parent="VBoxContainer/LeftRightButtonBox"]
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_constants/margin_left = 10
+
+[node name="LeftButtonTexture" type="TextureRect" parent="VBoxContainer/LeftRightButtonBox/LeftButtonMargin"]
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("1_86q1s")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="LeftButton" type="Button" parent="VBoxContainer/LeftRightButtonBox/LeftButtonMargin"]
+layout_mode = 2
+action_mode = 0
+shortcut = SubResource("Shortcut_20gel")
+
+[node name="RightButtonMargin" type="MarginContainer" parent="VBoxContainer/LeftRightButtonBox"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_constants/margin_right = 10
+
+[node name="RightButtonTexture" type="TextureRect" parent="VBoxContainer/LeftRightButtonBox/RightButtonMargin"]
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("1_86q1s")
+expand_mode = 3
+stretch_mode = 5
+flip_h = true
+
+[node name="RightButton" type="Button" parent="VBoxContainer/LeftRightButtonBox/RightButtonMargin"]
+layout_mode = 2
+action_mode = 0
+shortcut = SubResource("Shortcut_1jsyy")
+
+[node name="SelectButtonBox" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="SelectButtonVBox" type="VBoxContainer" parent="VBoxContainer/SelectButtonBox"]
+layout_mode = 2
+size_flags_vertical = 8
+alignment = 1
+
+[node name="SelectButtonMargin" type="MarginContainer" parent="VBoxContainer/SelectButtonBox/SelectButtonVBox"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 20
+
+[node name="SelectButton" type="Button" parent="VBoxContainer/SelectButtonBox/SelectButtonVBox/SelectButtonMargin"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_pfxha")
+theme_override_font_sizes/font_size = 45
+shortcut = SubResource("Shortcut_1ei6k")
+text = "Let's Go!"
+
+[node name="SubViewport" type="SubViewport" parent="."]
+disable_3d = true
+size = Vector2i(960, 540)
+
+[node name="TextureRect" type="TextureRect" parent="SubViewport"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("ViewportTexture_bepl5")
+
+[connection signal="pressed" from="VBoxContainer/LeftRightButtonBox/LeftButtonMargin/LeftButton" to="Characters" method="OnLeftButtonPressed"]
+[connection signal="pressed" from="VBoxContainer/LeftRightButtonBox/RightButtonMargin/RightButton" to="Characters" method="OnRightButtonPressed"]
+[connection signal="pressed" from="VBoxContainer/SelectButtonBox/SelectButtonVBox/SelectButtonMargin/SelectButton" to="Characters" method="OnSelectButtonPressed"]
