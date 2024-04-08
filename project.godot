@@ -25,11 +25,16 @@ window/stretch/aspect="expand"
 [dotnet]
 
 project/assembly_name="Graphics Project"
-project/solution_directory="C:\\Users\\s214263\\Documents\\Assignments\\2. Computer Graphics\\2. Advanced Graphical Techniques"
+project/solution_directory="res://"
+
+[layer_names]
+
+3d_render/layer_2="Outline"
+3d_render/layer_3="Post-Processing"
 
 [shader_globals]
 
-CharacterIsSelected={
-"type": "bool",
-"value": false
+outlineSilhouetteTex={
+"type": "sampler2D",
+"value": ""
 }

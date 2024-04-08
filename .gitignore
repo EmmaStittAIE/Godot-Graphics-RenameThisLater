@@ -1,2 +1,9 @@
 # Godot 4+ specific ignores
 .godot/
+Build/
+
+# Notepad++
+.bak
+
+# Visual Studio
+.vs/

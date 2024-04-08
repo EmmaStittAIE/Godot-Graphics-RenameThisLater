@@ -1,22 +1,34 @@
-[gd_scene load_steps=20 format=3 uid="uid://0oiyxjqdgwhh"]
+[gd_scene load_steps=24 format=3 uid="uid://0oiyxjqdgwhh"]
 
 [ext_resource type="Texture2D" uid="uid://cxndb0kt2wi0i" path="res://Textures/double-left-arrow-01.png" id="1_86q1s"]
-[ext_resource type="Script" path="res://Scripts/Characters.cs" id="1_leb1d"]
-[ext_resource type="Script" path="res://Scripts/OutlineMaskCompute.cs" id="1_pxksx"]
+[ext_resource type="Shader" path="res://Shaders/Outline.gdshader" id="1_ej18d"]
+[ext_resource type="Shader" path="res://Shaders/Silhouette.gdshader" id="1_oj50a"]
+[ext_resource type="Script" path="res://Scripts/Characters.cs" id="2_4llkn"]
 
-[sub_resource type="Shader" id="Shader_85q21"]
-code = "shader_type spatial;
+[sub_resource type="ViewportTexture" id="ViewportTexture_j2nl0"]
+viewport_path = NodePath("Camera3D/CullViewport")
 
-void fragment() {
-	ALBEDO = vec3(1.0, 1.0, 1.0);
-}"
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_6okbn"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8djdu"]
+resource_local_to_scene = true
 render_priority = 0
-shader = SubResource("Shader_85q21")
+shader = ExtResource("1_ej18d")
+shader_parameter/outlineSilhouetteTex = SubResource("ViewportTexture_j2nl0")
+
+[sub_resource type="QuadMesh" id="QuadMesh_mhw7e"]
+material = SubResource("ShaderMaterial_8djdu")
+flip_faces = true
+size = Vector2(2, 2)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jndqe"]
+render_priority = 0
+shader = ExtResource("1_oj50a")
+
+[sub_resource type="QuadMesh" id="QuadMesh_u3rr2"]
+material = SubResource("ShaderMaterial_jndqe")
+flip_faces = true
+size = Vector2(2, 2)
 
 [sub_resource type="BoxMesh" id="BoxMesh_0fmvg"]
-material = SubResource("ShaderMaterial_6okbn")
 
 [sub_resource type="SphereMesh" id="SphereMesh_o6gjb"]
 
@@ -58,23 +70,43 @@ unicode = 32
 [sub_resource type="Shortcut" id="Shortcut_1ei6k"]
 events = [SubResource("InputEventKey_uspv5")]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_bepl5"]
-viewport_path = NodePath("InefficientViewportUsage")
+[sub_resource type="ViewportTexture" id="ViewportTexture_7m0qu"]
+viewport_path = NodePath("Camera3D/CullViewport")
 
 [node name="Node3D" type="Node3D"]
 
-[node name="OutlineMaskCompute" type="Node" parent="."]
-script = ExtResource("1_pxksx")
-
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-4.26863e-08, -0.381603, 0.924326, -9.41097e-09, 0.924326, 0.381603, -1, 7.59042e-09, -4.30473e-08, 6.88338, 1.15278, 0)
-far = 10.0
+transform = Transform3D(-3.98261e-08, -0.381603, 0.924326, -9.41097e-09, 0.924326, 0.381603, -1, 6.49896e-09, -4.04036e-08, 6.88338, 1.15278, 0)
+cull_mask = 1048573
+far = 15.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D"]
+transform = Transform3D(1, 8.88178e-16, -3.55271e-15, 0, 1, -2.62581e-16, 0, -2.62581e-16, 1, 0, 0, 0)
+layers = 4
+mesh = SubResource("QuadMesh_mhw7e")
+skeleton = NodePath("../..")
+
+[node name="CullViewport" type="SubViewport" parent="Camera3D"]
+debug_draw = 1
+size = Vector2i(960, 540)
+
+[node name="Camera3D" type="Camera3D" parent="Camera3D/CullViewport"]
+transform = Transform3D(-3.98261e-08, -0.381603, 0.924326, -9.41097e-09, 0.924326, 0.381603, -1, 6.49896e-09, -4.04036e-08, 6.88338, 1.15278, 0)
+cull_mask = 2
+far = 15.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D/CullViewport/Camera3D"]
+transform = Transform3D(1, 1.77636e-15, -7.10543e-15, 0, 1, -2.62581e-16, 0, -2.62581e-16, 1, 0, 0, 0)
+layers = 2
+mesh = SubResource("QuadMesh_u3rr2")
+skeleton = NodePath("../..")
 
 [node name="Characters" type="Node3D" parent="."]
-script = ExtResource("1_leb1d")
+script = ExtResource("2_4llkn")
 
 [node name="Cube" type="MeshInstance3D" parent="Characters"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+layers = 3
 mesh = SubResource("BoxMesh_0fmvg")
 skeleton = NodePath("../..")
 
@@ -93,10 +125,9 @@ mesh = SubResource("PrismMesh_4dom4")
 skeleton = NodePath("../Sphere")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-2.22286e-08, -0.49142, 0.870922, -3.76374e-08, 0.870922, 0.49142, -1, -2.18557e-08, -3.78552e-08, 0, 0, 0)
+transform = Transform3D(-2.22286e-08, -0.49142, 0.870923, -3.76374e-08, 0.870923, 0.49142, -1, -2.18557e-08, -3.78552e-08, 0, 0, 0)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -187,7 +218,7 @@ size = Vector2i(960, 540)
 [node name="TextureRect" type="TextureRect" parent="SubViewport"]
 offset_right = 40.0
 offset_bottom = 40.0
-texture = SubResource("ViewportTexture_bepl5")
+texture = SubResource("ViewportTexture_7m0qu")
 
 [connection signal="pressed" from="VBoxContainer/LeftRightButtonBox/LeftButtonMargin/LeftButton" to="Characters" method="OnLeftButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/LeftRightButtonBox/RightButtonMargin/RightButton" to="Characters" method="OnRightButtonPressed"]
