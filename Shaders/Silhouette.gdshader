@@ -15,7 +15,7 @@ void fragment() {
 	//float linearDepth = -view.z;
 
 	if (depth < 1.0) {
-		ALBEDO = vec3(1.0);
+		ALBEDO = vec3(SCREEN_UV, 0);
 	}
 	else {
 		ALBEDO = vec3(0.0);

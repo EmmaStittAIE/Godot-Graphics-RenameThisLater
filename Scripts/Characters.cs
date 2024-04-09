@@ -1,9 +1,8 @@
 using Godot;
-using System;
 
 public partial class Characters : Node3D
 {
-    private float m_currentRotation;
+    private float m_currentRotationTarget;
     private float m_rotationTimer;
 
     public float m_timeToRotate = 3;
@@ -11,8 +10,6 @@ public partial class Characters : Node3D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-        GD.Print("Woah bdfvkbdfkvbkbdfv");
-
         m_rotationTimer = m_timeToRotate;
     }
 
@@ -21,7 +18,7 @@ public partial class Characters : Node3D
 	{
         if (m_rotationTimer < m_timeToRotate)
         {
-            float lerpedRot = Mathf.LerpAngle(Rotation.Y, m_currentRotation, m_rotationTimer / m_timeToRotate);
+            float lerpedRot = Mathf.LerpAngle(Rotation.Y, m_currentRotationTarget, m_rotationTimer / m_timeToRotate);
             RotateY(lerpedRot - Rotation.Y);
 
             m_rotationTimer += (float)delta;
@@ -31,14 +28,14 @@ public partial class Characters : Node3D
     // Signal from LeftButton UI element
     private void OnLeftButtonPressed()
     {
-        m_currentRotation += Mathf.Pi / 2;
+        m_currentRotationTarget += Mathf.Pi / 2;
         m_rotationTimer = 0;
     }
 
     // Signal from RightButton UI element
     private void OnRightButtonPressed()
     {
-        m_currentRotation -= Mathf.Pi / 2;
+        m_currentRotationTarget -= Mathf.Pi / 2;
         m_rotationTimer = 0;
     }
 

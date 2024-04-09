@@ -7,32 +7,36 @@ void vertex(){
 }
 
 void fragment() {
-	float silhouettePixel = texture(outlineSilhouetteTex, SCREEN_UV).x;
+	vec2 sizeOfPixel = 1.0 / vec2(textureSize(outlineSilhouetteTex, 0));
 	
-	vec2 positionSamples[9];
+	vec2 thisPixelSample = texture(outlineSilhouetteTex, vec2(SCREEN_UV)).xy;
 	
-	positionSamples[0] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x - 1.0, SCREEN_UV.y - 1.0)).xy;
-	positionSamples[1] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x, SCREEN_UV.y - 1.0)).xy;
-	positionSamples[2] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x + 1.0, SCREEN_UV.y - 1.0)).xy;
-	positionSamples[3] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x -1.0, SCREEN_UV.y)).xy;
-	positionSamples[4] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x, SCREEN_UV.y)).xy;
-	positionSamples[5] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x + 1.0, SCREEN_UV.y)).xy;
-	positionSamples[6] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x - 1.0, SCREEN_UV.y + 1.0)).xy;
-	positionSamples[7] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x, SCREEN_UV.y + 1.0)).xy;
-	positionSamples[8] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x + 1.0, SCREEN_UV.y + 1.0)).xy;
+	vec2 neighbourSamples[8];
+	neighbourSamples[0] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x - sizeOfPixel.x, SCREEN_UV.y - sizeOfPixel.y)).xy;
+	neighbourSamples[1] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x - sizeOfPixel.x, SCREEN_UV.y)).xy;
+	neighbourSamples[2] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x - sizeOfPixel.x, SCREEN_UV.y + sizeOfPixel.y)).xy;
+	neighbourSamples[3] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x, SCREEN_UV.y - sizeOfPixel.y)).xy;
+	neighbourSamples[4] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x, SCREEN_UV.y + sizeOfPixel.y)).xy;
+	neighbourSamples[5] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x + sizeOfPixel.x, SCREEN_UV.y - sizeOfPixel.y)).xy;
+	neighbourSamples[6] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x + sizeOfPixel.x, SCREEN_UV.y)).xy;
+	neighbourSamples[7] = texture(outlineSilhouetteTex, vec2(SCREEN_UV.x + sizeOfPixel.x, SCREEN_UV.y + sizeOfPixel.y)).xy;
 	
-	float distBetweenSamples[9];
-	
-	for (int i = 0; i < 9; i++) {
-		if (positionSamples[i] != vec2(0, 0)) {
-			distBetweenSamples[i] = length(positionSamples[i] - SCREEN_UV);
+	for (int i = 0; i < 8; i++) {
+		// If the sample is undefined, we want to skip over this
+		if (neighbourSamples[i] != vec2(0, 0))
+		{
+			// If this pixel is undefined, we colour it the sample's colour
+			if (thisPixelSample == vec2(0, 0)) {
+				ALBEDO = vec3(neighbourSamples[i], 0);
+			}
+			else {
+				float distToThisSeed = length(thisPixelSample - SCREEN_UV);
+				float distToSampleSeed = length(neighbourSamples[i] - SCREEN_UV);
+				
+				if (distToThisSeed > distToSampleSeed) {
+					ALBEDO = vec3(neighbourSamples[i], 0);
+				}
+			}
 		}
 	}
-	
-	if (positionSamples[4].x > 0.0)
-	{
-		ALBEDO = vec3(SCREEN_UV, 0);
-	}
-	
-	//ALBEDO = vec3(silhouettePixel);
 }

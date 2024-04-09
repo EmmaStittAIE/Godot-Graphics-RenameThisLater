@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Godot Debugging": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\s214263\\Documents\\Tools\\Godot\\Godot_v4.2.1-stable_mono_win64.exe",
+      "workingDirectory": "C:\\Users\\s214263\\Documents\\Assignments\\2. Computer Graphics\\2. Advanced Graphical Techniques"
+    }
+  }
+}
