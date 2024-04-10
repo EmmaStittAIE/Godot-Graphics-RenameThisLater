@@ -1,43 +1,75 @@
-[gd_scene load_steps=25 format=3 uid="uid://0oiyxjqdgwhh"]
+[gd_scene load_steps=31 format=3 uid="uid://0oiyxjqdgwhh"]
 
 [ext_resource type="Texture2D" uid="uid://cxndb0kt2wi0i" path="res://Textures/double-left-arrow-01.png" id="1_86q1s"]
-[ext_resource type="Script" path="res://Scripts/ExampleCompute.cs" id="1_du0eb"]
-[ext_resource type="Shader" path="res://Shaders/Outline.gdshader" id="1_ej18d"]
-[ext_resource type="Shader" path="res://Shaders/Silhouette.gdshader" id="1_oj50a"]
+[ext_resource type="Shader" path="res://Shaders/WavyScreen.gdshader" id="1_khv8q"]
 [ext_resource type="Script" path="res://Scripts/Characters.cs" id="2_4llkn"]
-[ext_resource type="Script" path="res://Scripts/OutlineCompute.cs" id="2_ge07y"]
+[ext_resource type="PackedScene" uid="uid://0u3ovrvy4kd0" path="res://Models/Mocap Guy.fbx" id="2_is2v1"]
+[ext_resource type="Animation" uid="uid://bh23xrdg5xawq" path="res://Animations/CrouchIdle.res" id="3_0krjv"]
+[ext_resource type="Animation" uid="uid://dte5o53g63ngw" path="res://Animations/CrouchStand.res" id="4_i8jla"]
+[ext_resource type="Animation" uid="uid://nbxj14tld5m8" path="res://Animations/StandIdle.res" id="5_hrkjw"]
+[ext_resource type="PackedScene" uid="uid://dasme7muhc7bb" path="res://Models/Olivia.fbx" id="6_3ngad"]
+[ext_resource type="PackedScene" uid="uid://bagc6rmki06xs" path="res://Models/Erika Archer.fbx" id="7_07gx5"]
+[ext_resource type="PackedScene" uid="uid://bxif43h7lbx3l" path="res://Models/Amy.fbx" id="8_283ds"]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_fkegn"]
-viewport_path = NodePath("Camera3D/CullViewport")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_kew6c"]
-resource_local_to_scene = true
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_x6yaw"]
 render_priority = 0
-shader = ExtResource("1_ej18d")
-shader_parameter/outlineSilhouetteTex = SubResource("ViewportTexture_fkegn")
+shader = ExtResource("1_khv8q")
 
-[sub_resource type="QuadMesh" id="QuadMesh_mhw7e"]
+[sub_resource type="QuadMesh" id="QuadMesh_xvlb4"]
+material = SubResource("ShaderMaterial_x6yaw")
 flip_faces = true
 size = Vector2(2, 2)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jndqe"]
-resource_local_to_scene = true
-render_priority = 0
-shader = ExtResource("1_oj50a")
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_aq36l"]
+_data = {
+"CrouchIdle": ExtResource("3_0krjv"),
+"CrouchStand": ExtResource("4_i8jla"),
+"StandIdle": ExtResource("5_hrkjw")
+}
 
-[sub_resource type="QuadMesh" id="QuadMesh_u3rr2"]
-resource_local_to_scene = true
-material = SubResource("ShaderMaterial_jndqe")
-flip_faces = true
-size = Vector2(2, 2)
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lj4qd"]
+animation = &"CrouchIdle"
 
-[sub_resource type="BoxMesh" id="BoxMesh_0fmvg"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_cm8wy"]
+animation = &"CrouchStand"
 
-[sub_resource type="SphereMesh" id="SphereMesh_o6gjb"]
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1utg5"]
+advance_mode = 2
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_t3icm"]
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_rmsam"]
+xfade_time = 0.8
+advance_mode = 2
+advance_condition = &"selected"
 
-[sub_resource type="PrismMesh" id="PrismMesh_4dom4"]
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_hcbm5"]
+xfade_time = 0.8
+advance_mode = 2
+advance_condition = &"deselected"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_12fhf"]
+states/CrouchIdle/node = SubResource("AnimationNodeAnimation_lj4qd")
+states/CrouchIdle/position = Vector2(399, 100)
+states/CrouchStand/node = SubResource("AnimationNodeAnimation_cm8wy")
+states/CrouchStand/position = Vector2(693, 100)
+states/End/position = Vector2(1140, 100)
+states/Start/position = Vector2(198, 100)
+transitions = ["Start", "CrouchIdle", SubResource("AnimationNodeStateMachineTransition_1utg5"), "CrouchIdle", "CrouchStand", SubResource("AnimationNodeStateMachineTransition_rmsam"), "CrouchStand", "CrouchIdle", SubResource("AnimationNodeStateMachineTransition_hcbm5")]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k3l3c"]
+albedo_color = Color(0.0588235, 0.466667, 0.2, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_16qvh"]
+material = SubResource("StandardMaterial3D_k3l3c")
+size = Vector2(10, 10)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_itsvw"]
+albedo_color = Color(0, 0, 0.172549, 1)
+metallic = 0.5
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_5r0rm"]
+material = SubResource("StandardMaterial3D_itsvw")
+size = Vector3(0.25, 0.34, 0.5)
 
 [sub_resource type="SystemFont" id="SystemFont_8xhej"]
 font_names = PackedStringArray("Centaur")
@@ -65,21 +97,7 @@ events = [SubResource("InputEventKey_tdnfc")]
 [sub_resource type="SystemFont" id="SystemFont_pfxha"]
 font_names = PackedStringArray("Papyrus")
 
-[sub_resource type="InputEventKey" id="InputEventKey_uspv5"]
-device = -1
-keycode = 32
-unicode = 32
-
-[sub_resource type="Shortcut" id="Shortcut_1ei6k"]
-events = [SubResource("InputEventKey_uspv5")]
-
 [node name="Node3D" type="Node3D"]
-
-[node name="ExampleCompute" type="Node" parent="."]
-script = ExtResource("1_du0eb")
-
-[node name="OutlineCompute" type="Node" parent="."]
-script = ExtResource("2_ge07y")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-3.98261e-08, -0.381603, 0.924326, -9.41097e-09, 0.924326, 0.381603, -1, 6.49896e-09, -4.04036e-08, 6.88338, 1.15278, 0)
@@ -87,49 +105,113 @@ cull_mask = 1048573
 far = 15.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D"]
-transform = Transform3D(1, 1.68754e-14, -6.75016e-14, 0, 1, -2.62581e-16, 0, -2.6258e-16, 1, 0.0377456, 0.186069, -2.18209)
-layers = 4
-material_override = SubResource("ShaderMaterial_kew6c")
-mesh = SubResource("QuadMesh_mhw7e")
-skeleton = NodePath("../..")
+transform = Transform3D(1, 8.88178e-16, -3.55271e-15, 0, 1, -2.62581e-16, 0, -2.62581e-16, 1, 0, 0, 0)
+mesh = SubResource("QuadMesh_xvlb4")
 
-[node name="CullViewport" type="SubViewport" parent="Camera3D"]
-debug_draw = 1
-size = Vector2i(960, 540)
-
-[node name="Camera3D" type="Camera3D" parent="Camera3D/CullViewport"]
-transform = Transform3D(-3.98261e-08, -0.381603, 0.924326, -9.41097e-09, 0.924326, 0.381603, -1, 6.49896e-09, -4.04036e-08, 6.88338, 1.15278, 0)
-cull_mask = 2
-far = 15.0
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D/CullViewport/Camera3D"]
-transform = Transform3D(1, 1.77636e-15, -7.10543e-15, 0, 1, -2.62581e-16, 0, -2.62581e-16, 1, 0, 0, 0)
-layers = 2
-mesh = SubResource("QuadMesh_u3rr2")
-skeleton = NodePath("../..")
-
-[node name="Characters" type="Node3D" parent="."]
+[node name="RotationNode" type="Node3D" parent="." node_paths=PackedStringArray("m_animTrees", "m_selectButton")]
 script = ExtResource("2_4llkn")
+m_animTrees = [NodePath("Characters/Character1/AnimationTree"), NodePath("Characters/Character2/AnimationTree"), NodePath("Characters/Character3/AnimationTree"), NodePath("Characters/Character4/AnimationTree")]
+m_selectButton = NodePath("../VBoxContainer/SelectButtonBox/SelectButtonVBox/SelectButtonMargin/SelectButton")
+m_timeToRotate = 3.0
 
-[node name="Cube" type="MeshInstance3D" parent="Characters"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
-layers = 3
-mesh = SubResource("BoxMesh_0fmvg")
-skeleton = NodePath("../..")
+[node name="Characters" type="Node3D" parent="RotationNode"]
 
-[node name="Sphere" type="MeshInstance3D" parent="Characters"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
-mesh = SubResource("SphereMesh_o6gjb")
+[node name="Character1" parent="RotationNode/Characters" instance=ExtResource("2_is2v1")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 4, -0.0173204, 0)
 
-[node name="Capsule" type="MeshInstance3D" parent="Characters"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
-mesh = SubResource("CapsuleMesh_t3icm")
-skeleton = NodePath("../Sphere")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="RotationNode/Characters/Character1"]
+libraries = {
+"": SubResource("AnimationLibrary_aq36l")
+}
+autoplay = "CrouchIdle"
 
-[node name="Prism" type="MeshInstance3D" parent="Characters"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
-mesh = SubResource("PrismMesh_4dom4")
-skeleton = NodePath("../Sphere")
+[node name="AnimationTree" type="AnimationTree" parent="RotationNode/Characters/Character1"]
+libraries = {
+"": SubResource("AnimationLibrary_aq36l")
+}
+tree_root = SubResource("AnimationNodeStateMachine_12fhf")
+anim_player = NodePath("../AnimationPlayer")
+parameters/conditions/deselected = true
+parameters/conditions/selected = false
+
+[node name="Character2" parent="RotationNode/Characters" instance=ExtResource("6_3ngad")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, -4)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="RotationNode/Characters/Character2"]
+libraries = {
+"": SubResource("AnimationLibrary_aq36l")
+}
+autoplay = "CrouchIdle"
+
+[node name="AnimationTree" type="AnimationTree" parent="RotationNode/Characters/Character2"]
+libraries = {
+"": SubResource("AnimationLibrary_aq36l")
+}
+tree_root = SubResource("AnimationNodeStateMachine_12fhf")
+anim_player = NodePath("../AnimationPlayer")
+parameters/conditions/deselected = false
+parameters/conditions/selected = false
+
+[node name="Character3" parent="RotationNode/Characters" instance=ExtResource("7_07gx5")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -4, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="RotationNode/Characters/Character3"]
+libraries = {
+"": SubResource("AnimationLibrary_aq36l")
+}
+autoplay = "CrouchIdle"
+
+[node name="AnimationTree" type="AnimationTree" parent="RotationNode/Characters/Character3"]
+libraries = {
+"": SubResource("AnimationLibrary_aq36l")
+}
+tree_root = SubResource("AnimationNodeStateMachine_12fhf")
+anim_player = NodePath("../AnimationPlayer")
+parameters/conditions/deselected = false
+parameters/conditions/selected = false
+
+[node name="Character4" parent="RotationNode/Characters" instance=ExtResource("8_283ds")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.125171, 4)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="RotationNode/Characters/Character4"]
+libraries = {
+"": SubResource("AnimationLibrary_aq36l")
+}
+autoplay = "CrouchIdle"
+
+[node name="AnimationTree" type="AnimationTree" parent="RotationNode/Characters/Character4"]
+libraries = {
+"": SubResource("AnimationLibrary_aq36l")
+}
+tree_root = SubResource("AnimationNodeStateMachine_12fhf")
+anim_player = NodePath("../AnimationPlayer")
+parameters/conditions/deselected = false
+parameters/conditions/selected = false
+
+[node name="Terrain" type="Node3D" parent="RotationNode"]
+
+[node name="Floor" type="MeshInstance3D" parent="RotationNode/Terrain"]
+mesh = SubResource("PlaneMesh_16qvh")
+
+[node name="Box1" type="MeshInstance3D" parent="RotationNode/Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.52747, 0.0114539, 0.0978619)
+mesh = SubResource("BoxMesh_5r0rm")
+skeleton = NodePath("../Floor")
+
+[node name="Box2" type="MeshInstance3D" parent="RotationNode/Terrain"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.098, 0.0989378, -4.48674)
+mesh = SubResource("BoxMesh_5r0rm")
+skeleton = NodePath("../Floor")
+
+[node name="Box3" type="MeshInstance3D" parent="RotationNode/Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.43509, -0.0059228, -0.098)
+mesh = SubResource("BoxMesh_5r0rm")
+skeleton = NodePath("../Floor")
+
+[node name="Box4" type="MeshInstance3D" parent="RotationNode/Terrain"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.098, 0.00967464, 4.36499)
+mesh = SubResource("BoxMesh_5r0rm")
+skeleton = NodePath("../Floor")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-2.22286e-08, -0.49142, 0.870923, -3.76374e-08, 0.870923, 0.49142, -1, -2.18557e-08, -3.78552e-08, 0, 0, 0)
@@ -176,6 +258,7 @@ stretch_mode = 5
 
 [node name="LeftButton" type="Button" parent="VBoxContainer/LeftRightButtonBox/LeftButtonMargin"]
 layout_mode = 2
+focus_mode = 0
 action_mode = 0
 shortcut = SubResource("Shortcut_20gel")
 
@@ -194,6 +277,7 @@ flip_h = true
 
 [node name="RightButton" type="Button" parent="VBoxContainer/LeftRightButtonBox/RightButtonMargin"]
 layout_mode = 2
+focus_mode = 0
 action_mode = 0
 shortcut = SubResource("Shortcut_1jsyy")
 
@@ -209,15 +293,36 @@ alignment = 1
 
 [node name="SelectButtonMargin" type="MarginContainer" parent="VBoxContainer/SelectButtonBox/SelectButtonVBox"]
 layout_mode = 2
+theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 20
 
 [node name="SelectButton" type="Button" parent="VBoxContainer/SelectButtonBox/SelectButtonVBox/SelectButtonMargin"]
 layout_mode = 2
+focus_mode = 0
 theme_override_fonts/font = SubResource("SystemFont_pfxha")
 theme_override_font_sizes/font_size = 45
-shortcut = SubResource("Shortcut_1ei6k")
-text = "Let's Go!"
+toggle_mode = true
+text = "Select!"
 
-[connection signal="pressed" from="VBoxContainer/LeftRightButtonBox/LeftButtonMargin/LeftButton" to="Characters" method="OnLeftButtonPressed"]
-[connection signal="pressed" from="VBoxContainer/LeftRightButtonBox/RightButtonMargin/RightButton" to="Characters" method="OnRightButtonPressed"]
-[connection signal="pressed" from="VBoxContainer/SelectButtonBox/SelectButtonVBox/SelectButtonMargin/SelectButton" to="Characters" method="OnSelectButtonPressed"]
+[node name="WoahButtonVBox" type="VBoxContainer" parent="VBoxContainer/SelectButtonBox"]
+layout_mode = 2
+size_flags_vertical = 8
+alignment = 1
+
+[node name="WoahButtonMargin" type="MarginContainer" parent="VBoxContainer/SelectButtonBox/WoahButtonVBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_bottom = 20
+
+[node name="WoahButton" type="Button" parent="VBoxContainer/SelectButtonBox/WoahButtonVBox/WoahButtonMargin"]
+layout_mode = 2
+focus_mode = 0
+theme_override_fonts/font = SubResource("SystemFont_pfxha")
+theme_override_font_sizes/font_size = 45
+toggle_mode = true
+text = "Woah???"
+
+[connection signal="pressed" from="VBoxContainer/LeftRightButtonBox/LeftButtonMargin/LeftButton" to="RotationNode" method="OnLeftButtonPressed"]
+[connection signal="pressed" from="VBoxContainer/LeftRightButtonBox/RightButtonMargin/RightButton" to="RotationNode" method="OnRightButtonPressed"]
+[connection signal="toggled" from="VBoxContainer/SelectButtonBox/SelectButtonVBox/SelectButtonMargin/SelectButton" to="RotationNode" method="OnSelectButtonToggle"]
+[connection signal="toggled" from="VBoxContainer/SelectButtonBox/WoahButtonVBox/WoahButtonMargin/WoahButton" to="RotationNode" method="OnWoahButtonToggle"]

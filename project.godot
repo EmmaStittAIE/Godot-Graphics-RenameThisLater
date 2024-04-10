@@ -34,7 +34,7 @@ project/solution_directory="res://"
 
 [shader_globals]
 
-outlineSilhouetteTex={
-"type": "sampler2D",
-"value": ""
+waveEffect={
+"type": "bool",
+"value": false
 }

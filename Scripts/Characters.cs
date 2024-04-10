@@ -2,10 +2,20 @@ using Godot;
 
 public partial class Characters : Node3D
 {
-    private float m_currentRotationTarget;
+    private float m_currentRotationTarget = 0;
     private float m_rotationTimer;
 
-    public float m_timeToRotate = 3;
+    private int m_currentTargetIndex = 0;
+
+    [Export]
+    public AnimationTree[] m_animTrees;
+    [Export]
+    public Button m_selectButton;
+    [Export]
+    public MeshInstance3D m_waveShader;
+
+    [Export]
+    public float m_timeToRotate;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -30,6 +40,14 @@ public partial class Characters : Node3D
     {
         m_currentRotationTarget += Mathf.Pi / 2;
         m_rotationTimer = 0;
+
+        m_animTrees[m_currentTargetIndex].Set("parameters/conditions/selected", false);
+        m_animTrees[m_currentTargetIndex].Set("parameters/conditions/deselected", true);
+
+        m_selectButton.ButtonPressed = false;
+
+        m_currentTargetIndex -= 1;
+        if (m_currentTargetIndex < 0) { m_currentTargetIndex = m_animTrees.Length - 1; }
     }
 
     // Signal from RightButton UI element
@@ -37,11 +55,27 @@ public partial class Characters : Node3D
     {
         m_currentRotationTarget -= Mathf.Pi / 2;
         m_rotationTimer = 0;
+
+        m_animTrees[m_currentTargetIndex].Set("parameters/conditions/selected", false);
+        m_animTrees[m_currentTargetIndex].Set("parameters/conditions/deselected", true);
+
+        m_selectButton.ButtonPressed = false;
+
+        m_currentTargetIndex += 1;
+        if (m_currentTargetIndex >= m_animTrees.Length) { m_currentTargetIndex = 0; }
     }
 
     // Signal from SelectButton UI element
-    private void OnSelectButtonPressed()
+    private void OnSelectButtonToggle(bool toggledOn)
     {
-        // Replace with function body.
+        // I hate this but I'm not sure how to solve it
+        m_animTrees[m_currentTargetIndex].Set("parameters/conditions/selected", toggledOn);
+        m_animTrees[m_currentTargetIndex].Set("parameters/conditions/deselected", !toggledOn);
+    }
+
+    // Signal from WoahButton UI element
+    private void OnWoahButtonToggle(bool toggledOn)
+    {
+        RenderingServer.GlobalShaderParameterSet("waveEffect", toggledOn);
     }
 }

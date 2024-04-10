@@ -45,7 +45,7 @@ public partial class ExampleCompute : Node
 
 		GD.Print("Input: ", string.Join(", ", inputFloats));
 		GD.Print("Output: ", string.Join(", ", outputFloats));
-    }
+	}
 
 	public override void _Process(double delta)
 	{
