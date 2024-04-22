@@ -1,0 +1,36 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://b6gh0t0w8oay7"
+path.s3tc="res://.godot/imported/Erika Archer-af320701b6191458a8df31a7db1fc569_Erika_Archer_Clothes_diffuse.png-6c3230195d44de72a0c5ae0b69500659.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+generator_parameters={}
+
+[deps]
+
+source_file="res://Models/Erika Archer-af320701b6191458a8df31a7db1fc569_Erika_Archer_Clothes_diffuse.png"
+dest_files=["res://.godot/imported/Erika Archer-af320701b6191458a8df31a7db1fc569_Erika_Archer_Clothes_diffuse.png-6c3230195d44de72a0c5ae0b69500659.s3tc.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0
