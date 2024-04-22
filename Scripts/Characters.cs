@@ -11,8 +11,6 @@ public partial class Characters : Node3D
     public AnimationTree[] m_animTrees;
     [Export]
     public Button m_selectButton;
-    [Export]
-    public MeshInstance3D m_waveShader;
 
     [Export]
     public float m_timeToRotate;
