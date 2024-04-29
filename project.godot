@@ -32,9 +32,13 @@ project/solution_directory="res://"
 3d_render/layer_2="Outline"
 3d_render/layer_3="Post-Processing"
 
+[rendering]
+
+anti_aliasing/quality/use_taa=true
+
 [shader_globals]
 
-waveEffect={
-"type": "bool",
-"value": false
+waveFadeIn={
+"type": "float",
+"value": 0.0
 }

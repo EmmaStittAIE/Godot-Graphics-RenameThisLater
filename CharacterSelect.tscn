@@ -102,6 +102,7 @@ script = ExtResource("2_4llkn")
 m_animTrees = [NodePath("Characters/Character1/AnimationTree"), NodePath("Characters/Character2/AnimationTree"), NodePath("Characters/Character3/AnimationTree"), NodePath("Characters/Character4/AnimationTree")]
 m_selectButton = NodePath("../UI/VBoxContainer/SelectButtonBox/SelectButtonVBox/SelectButtonMargin/SelectButton")
 m_timeToRotate = 1.0
+m_waveEffectActivationSpeed = 1.0
 
 [node name="Characters" type="Node3D" parent="RotationNode"]
 
